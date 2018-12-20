@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script type="text/javascript">
+   
+   	 function success() {
+		 if(document.getElementById("m").value==="") { 
+            document.getElementById('button').disabled = true; 
+        } else { 
+            document.getElementById('button').disabled = false;
+        }
+    }
+    </script>
+	<script>
+
+		  $(function () {
+			var output = $('#output');
+		    var socket = io();
+		    $('form').submit(function(){
+		      socket.emit('chat', $('#m').val());
+		      $('#m').val('');
+		      return false;
+		    });
+		    socket.on('chat', function(msg){
+		    	
+				for (var i=0; i<msg.length;i++)
+		    	{
+		    	  //$('#messages').append($('<li>').text(msg[i].message));
+				  var result = Mustache.render(template, msg[i].message);
+					output.append(result);
+		  		}
+		    });
+		  });
+	</script>
+	<script type="text/template" id="test">
+		<h1>{{Subject}}</h1>
+			<ul>
+			{{#Messages}}
+				<li>{{msg}}</li>
+			{{/Messages}}
+		</ul>
+	<head>
+
+	</head>
+<body>
+	 <form action="/action_page.php">
+        
+		<div id="output">
+
+		</div>
+		
+	    <form action="">
+		      <input id="m" autocomplete="off" onkeyup="success()"/>
+		      <button id="button" disabled>Send</button>		
+		  </form>
+</form> 
+</body>
+</html> 
